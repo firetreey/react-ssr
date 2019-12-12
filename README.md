@@ -5,6 +5,10 @@
 ```
 npm install
 ```
+- ### Start and hot-reloads by one command
+```
+npm run start
+```
 - ### Pack and hot-reloads for server
 ```
 npm run dev:server

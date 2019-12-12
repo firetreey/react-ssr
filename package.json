@@ -6,7 +6,9 @@
   "scripts": {
     "dev:server": "webpack --config webpack.server.js --watch",
     "dev:start": "nodemon --watch build --exec node \"./build/bundle.js\"",
-    "dev:client": "webpack --config webpack.client.js --watch"
+    "dev:client": "webpack --config webpack.client.js --watch",
+    "start": "concurrently \"npm run dev:server\" \"npm run dev:client\" \"npm run dev:start\"",
+    "dev:moke": "nodemon --watch \"./moke.js\" --exec node \"./moke.js\""
   },
   "author": "william",
   "license": "ISC",
@@ -21,8 +23,14 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "axios": "^0.19.0",
+    "concurrently": "^5.0.1",
     "nodemon": "^2.0.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "react-router-dom": "^5.1.2",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
   }
 }
