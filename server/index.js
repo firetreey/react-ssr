@@ -29,7 +29,7 @@ server.get('*', (req, res) => {
         }
     })
 
-    Promise.all(promises).then(() => {
+    Promise.all(promises).finally(() => {
 
         const Page = (
             <Provider store={store}>
