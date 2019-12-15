@@ -1,32 +1,32 @@
 import axios from '../axiosProxy'
 
-const GET_LIST = 'INDEX/GET_LIST'
+const GET_INFO = 'INDEX/GET_INFO'
 
-const changeList = list => ({
-    type: GET_LIST,
-    list
+const changeInfo = userInfo => ({
+    type: GET_INFO,
+    userInfo
 })
 
-export const getIndexList = server => {
+export const getUserInfo = server => {
     return (dispatch, getState, axiosInstance) => {
-        return axios.get('/api/student/list')
+        return axios.get('/api/user/info')
             .then((res) => {
-                const { list } = res.data;
-                dispatch(changeList(list))
+                const {info} = res.data;
+                dispatch(changeInfo(info))
             })
     }
 }
 
 const defaultState = {
-    list: []
+    userInfo: []
 }
 
 export default (state = defaultState, action) => {
     switch (action.type) {
-        case GET_LIST:
+        case GET_INFO:
             const newState = {
                 ...defaultState,
-                list: action.list
+                userInfo: action.userInfo
             };
             return newState
         default:

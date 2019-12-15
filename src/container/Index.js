@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getIndexList } from '../store/index'
+import {Link} from 'react-router-dom'
 
 function Index(props) {
     const [count, setCount] = useState(0)
     useEffect(() => {
-        props.getIndexList()
+        if (!props.list.length) {
+            props.getIndexList()
+        }
     }, [])
     return (<div>
-        <Link to='/about'>about</Link>
         <h1>hello world!</h1>
         <h2>{count}</h2>
         <button onClick={() => {
@@ -21,10 +22,21 @@ function Index(props) {
         <hr />
         <ul>
             {props.list.map((stu) => {
-                return <li key={stu.uid}>{stu.name}</li>
+                if (stu.uid === 1) {
+                    return <li key={stu.uid}><Link to='/user'>{stu.name}</Link></li>
+                }else {
+                    return <li key={stu.uid}>{stu.name}</li>
+                }
             })}
         </ul>
     </div>)
 }
 
-export default connect(state => ({ list: state.index.list }), { getIndexList })(Index)
+Index.loadData = (store) => {
+    return store.dispatch(getIndexList())
+}
+
+export default connect(
+    state => ({ list: state.index.list }),
+    { getIndexList }
+)(Index)
