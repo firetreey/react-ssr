@@ -1,8 +1,8 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { StaticRouter, matchPath, Route } from 'react-router-dom'
+import { StaticRouter, matchPath, Route, Switch } from 'react-router-dom'
 import express from 'express'
-// import App from '../src/App'
+import App from '../src/App'
 import routes from '../src/routes'
 
 import Header from '../src/component/Header'
@@ -10,11 +10,15 @@ import Header from '../src/component/Header'
 import { Provider } from 'react-redux'
 import { getServerStore } from '../src/store/store'
 
+import proxy from 'http-proxy-middleware'
+
 const store = getServerStore()
 
 const server = express()
 
 server.use(express.static('public'))
+
+server.use('/api',proxy({target: 'http://localhost:8090', changeOrigin: true}))
 
 server.get('*', (req, res) => {
 
@@ -24,23 +28,38 @@ server.get('*', (req, res) => {
         if (match) {
             const { loadData } = route.component
             if (loadData) {
-                promises.push(loadData(store))
+                const promise = new Promise((resolve, reject) => {
+                    loadData(store).then(resolve).catch((err)=>{
+                        console.log(err.response.status,err.response.config.url)
+                        resolve()
+                    })
+                })
+                promises.push(promise)
             }
         }
     })
 
-    Promise.all(promises).finally(() => {
-
+    Promise.all(promises).then(() => {
+        const context = {}
         const Page = (
             <Provider store={store}>
-                <StaticRouter location={req.url}>
+                <StaticRouter location={req.url} context={context}>
                     <Header></Header>
-                    {routes.map(route => <Route {...route}></Route>)}
+                    <Switch>
+                        {routes.map(route => <Route {...route}></Route>)}
+                    </Switch>
                 </StaticRouter>
             </Provider>
         )
-
         const content = renderToString(Page)
+        console.log(context)
+        console.log(res.statusCode)
+        if (context.statusCode) {
+            res.statusCode = context.statusCode
+        }
+        if (context.action === 'REPLACE') {
+            res.redirect(301, context.url)
+        }
         res.send(`
             <html>
                 <head>

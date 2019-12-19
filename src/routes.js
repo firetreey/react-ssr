@@ -1,12 +1,13 @@
 import Index from './container/Index'
 import About from './container/About'
 import User from './container/User'
+import NotFound from './container/NotFound'
 
 const routes = [
     {
         path: '/',
         component: Index,
-        // exact: true,
+        exact: true,
         key: 'index'
     },
     {
@@ -21,6 +22,10 @@ const routes = [
         exact: true,
         key: 'user'
     },
+    {
+        component: NotFound,
+        key: 'NotFound'
+    }
 ]
 
 export default routes

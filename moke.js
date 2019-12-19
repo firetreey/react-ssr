@@ -3,7 +3,7 @@ let express = require('express')
 const server = express()
 
 server.get('/api/student/list',(req, res)=>{
-    res.header('Access-Control-Allow-Origin','*')
+    // res.header('Access-Control-Allow-Origin','*')
     res.header('Access-Control-Allow-MethodS','PUT,DELETE,GET,POST')
     res.header('Content-Type',"application/json;charset='utf-8'")
     res.json({
@@ -30,7 +30,7 @@ server.get('/api/student/list',(req, res)=>{
 })
 
 server.get('/api/user/info',(req, res)=>{
-    res.header('Access-Control-Allow-Origin','*')
+    // res.header('Access-Control-Allow-Origin','*')
     res.header('Access-Control-Allow-MethodS','PUT,DELETE,GET,POST')
     res.header('Content-Type',"application/json;charset='utf-8'")
     res.json({

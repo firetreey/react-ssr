@@ -1,5 +1,3 @@
-import axios from '../axiosProxy'
-
 const GET_LIST = 'INDEX/GET_LIST'
 
 const changeList = list => ({
@@ -9,7 +7,7 @@ const changeList = list => ({
 
 export const getIndexList = server => {
     return (dispatch, getState, axiosInstance) => {
-        return axios.get('/api/student/list')
+        return axiosInstance.get('/api/student/list')
             .then((res) => {
                 const { list } = res.data;
                 dispatch(changeList(list))

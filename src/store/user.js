@@ -1,5 +1,3 @@
-import axios from '../axiosProxy'
-
 const GET_INFO = 'INDEX/GET_INFO'
 
 const changeInfo = userInfo => ({
@@ -9,7 +7,7 @@ const changeInfo = userInfo => ({
 
 export const getUserInfo = server => {
     return (dispatch, getState, axiosInstance) => {
-        return axios.get('/api/user/info')
+        return axiosInstance.get('/api/user/info')
             .then((res) => {
                 const {info} = res.data;
                 dispatch(changeInfo(info))

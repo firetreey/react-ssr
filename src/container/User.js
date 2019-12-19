@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { getUserInfo } from '../store/user'
 
+
 function User(props) {
     useEffect(() => {
         if (!props.userInfo.name) {
