@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { getIndexList } from '../store/index'
 import {Link} from 'react-router-dom'
+import styles from './Index.css'
+import withStyle from '../withStyle'
 
 function Index(props) {
     const [count, setCount] = useState(0)
@@ -11,7 +13,7 @@ function Index(props) {
         }
     }, [])
     return (<div>
-        <h1>hello world!</h1>
+        <h1 className={styles.title}>hello world!</h1>
         <h2>{count}</h2>
         <button onClick={() => {
             setCount(count + 1)
@@ -39,4 +41,4 @@ Index.loadData = (store) => {
 export default connect(
     state => ({ list: state.index.list }),
     { getIndexList }
-)(Index)
+)(withStyle(Index, styles))

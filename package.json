@@ -7,7 +7,7 @@
     "dev:server": "webpack --config webpack.server.js --watch",
     "dev:start": "nodemon --watch build --exec node \"./build/bundle.js\"",
     "dev:client": "webpack --config webpack.client.js --watch",
-    "start": "concurrently \"npm run dev:server\" \"npm run dev:client\" \"npm run dev:start\"",
+    "start": "concurrently \"npm run dev:server\" \"npm run dev:client\" \"npm run dev:start\" \"npm run dev:moke\"",
     "dev:moke": "nodemon --watch \"./moke.js\" --exec node \"./moke.js\""
   },
   "author": "william",
@@ -19,6 +19,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^3.4.0",
     "express": "^4.17.1",
+    "html-webpack-plugin": "^3.2.0",
     "http-proxy-middleware": "^0.20.0",
     "isomorphic-style-loader": "^5.1.0",
     "style-loader": "^1.0.2",

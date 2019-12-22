@@ -12,15 +12,29 @@ import { getServerStore } from '../src/store/store'
 
 import proxy from 'http-proxy-middleware'
 
+import path from 'path'
+import fs from 'fs'
+
 const store = getServerStore()
 
 const server = express()
 
 server.use(express.static('public'))
 
-server.use('/api',proxy({target: 'http://localhost:8090', changeOrigin: true}))
+server.use('/api', proxy({ target: 'http://localhost:8090', changeOrigin: true }))
+
+function csrRender(res) {
+    const filePath = path.resolve(process.cwd(), 'public/index.csr.html')
+    const html = fs.readFileSync(filePath, 'utf-8')
+    return res.send(html)
+}
 
 server.get('*', (req, res) => {
+
+    if (req.query._mode === 'csr') {
+        console.log('通过URL开启csr降级')
+        return csrRender(res)
+    }
 
     const promises = []
     routes.some(route => {
@@ -29,8 +43,8 @@ server.get('*', (req, res) => {
             const { loadData } = route.component
             if (loadData) {
                 const promise = new Promise((resolve, reject) => {
-                    loadData(store).then(resolve).catch((err)=>{
-                        console.log(err.response.status,err.response.config.url)
+                    loadData(store).then(resolve).catch((err) => {
+                        console.log(err.response.status, err.response.config.url)
                         resolve()
                     })
                 })
@@ -40,7 +54,9 @@ server.get('*', (req, res) => {
     })
 
     Promise.all(promises).then(() => {
-        const context = {}
+        const context = {
+            css: []
+        }
         const Page = (
             <Provider store={store}>
                 <StaticRouter location={req.url} context={context}>
@@ -60,11 +76,15 @@ server.get('*', (req, res) => {
         if (context.action === 'REPLACE') {
             res.redirect(301, context.url)
         }
+
+        const css = context.css.join('\n')
+
         res.send(`
             <html>
                 <head>
                     <mate charset='UTF-8'/>
                     <title>reat-ssr</title>
+                    <style>${css}</style>
                 </head>
                 <body>
                     <div id='root'>${content}</div>
@@ -77,9 +97,9 @@ server.get('*', (req, res) => {
         `)
 
     })
-    .catch(err => {
-        res.send(err)
-    })
+        .catch(err => {
+            res.send(err)
+        })
 })
 
 server.listen(8080, (err) => {
